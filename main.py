@@ -2,7 +2,7 @@ from metagraph import Metagraph
 from nucleus import Nucleus
 from neuron import Neuron
 from modelfn import Modelfn
-from feynman import Feynman
+from synapse import Synapse
 from hprams import Hparams
 
 import argparse
@@ -25,15 +25,21 @@ def set_timed_loops(tl, config, neuron, metagraph):
 
 def main(hparams):
 
+    dataset = Dataset(hparams)
+
     metagraph = Metagraph(hparams)
 
-    feynmann = Feynmann(hparams)
+    dendrite = Dendrite(hparams)
+
+    modelfn = Modelfn(hparams)
 
     nucleus = Nucleus(hparams, modelfn)
 
     neuron = Neuron(hparams, nucleus, metagraph)
 
-    neuron.serve()
+    synapse = Synapse(hparams, neuron, metagraph)
+
+    synapse.serve()
 
     tl = Timeloop()
     set_timed_loops(tl, hparams, neuron, metagraph)
@@ -47,20 +53,16 @@ def main(hparams):
 
     try:
         while True:
-            time.sleep(100)
+            neuron.train()
 
     except KeyboardInterrupt:
-        logger.debug('Neuron stopped with keyboard interrupt.')
         tear_down(hparams, neuron, nucleus, metagraph)
 
     except Exception as e:
-        logger.error('Neuron stopped with interrupt on error: ' + str(e))
         tear_down(hparams, neuron, nucleus, metagraph)
 
 
 if __name__ == '__main__':
-    logger.debug("started neuron.")
-    # Server parameters.
     hparams = Hparams.get_hparams()
     main(hparams)
 

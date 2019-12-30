@@ -105,14 +105,14 @@ message GradeRequest {
 	bytes spikes = 8;
 
 	// Grades Payload.
-	bytes spikes = 8;
+	bytes grades = 9;
 }
 
 // Reverse gradient call.
 message GradeResponse {
-	// Protocol version 1.0
+    // Protocol version 1.0
 	float version = 1;
 
 	// Boolean, Gradient accepted message.
-  bool accept = 2;
+    bool accept = 2;
 }

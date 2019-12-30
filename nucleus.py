@@ -11,11 +11,21 @@ def Nucleus:
             self._model_fn.init()
             self._session.run(tf.compat.v1.global_variables_initializer())
 
-    def spike(self, parent_spikes, child_spikes):
-        # Build Feeds dictionary.
-        feeds = {self._spikes : parent_spikes}
+    def spike(self, x_batch, c_batches):
+        feeds = {
+            self.x_batch : x_batch
+        }
         for _ in self._children:
-            feeds[self._child_spikes[i]] = child_spikes[i]
-        fetches = {'embedding' : self._output}
-        return self._session.run(fetches, feeds)['embedding']
+            feeds[self.c_batch[i]] = c_batches[i]
+        fetches = {'y_batch' : self.y_batch}
+        return self._session.run(fetches, feeds)['y_batch']
+
+
+    def grade(self, y_grads, x_batch):
+        feeds = {
+            self.x_batch: x_batch,
+            self.y_grads: y_grads
+        }
+        self._session.run(feeds=feeds)
+
 
