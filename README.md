@@ -14,7 +14,7 @@ Networked tensorflow training graphs.
 
 ## Motivation
 
-Network architecture search and peer to peer networks.
+Peer-to-peer networks 
 
 ---
 
